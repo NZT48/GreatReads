@@ -1,0 +1,200 @@
+<div class="container">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="card-title mb-4">
+                        <div class="d-flex justify-content-start">
+                            <div class="userData ml-3">
+                                <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a
+                                        [routerLink]="['/event', displayEvent.name]">{{displayEvent.name}}</a></h2>
+                                <div class="row" *ngIf="notJoined">
+                                    <button type="button" *ngIf="displayEvent.active" (click)="addUserToEvent()"
+                                        class="btn btn-success ">Join
+                                        event</button>
+                                    <p *ngIf="!displayEvent.active">Cannot join, event is not active.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <span *ngIf="displayEvent.active">
+                            <p class="btn btn-info">Active</p>
+                        </span>
+                        <span *ngIf="!displayEvent.active">
+                            <p class="btn btn-warning">Not active</p>
+                        </span>
+                    </div>
+
+                    <div class="row" *ngIf="displayEvent.author == auth.getIdentity().username && readyDate">
+                        <span *ngIf="displayEvent.active">
+                            <button type="button" (click)="stopEvent()" class="btn btn-primary btn-danger">Stop
+                                event</button>
+                        </span>
+                        <span *ngIf="!displayEvent.active">
+                            <button type="button" (click)="startEvent()" class="btn btn-primary btn-success">Start
+                                event</button>
+                        </span>
+
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo"
+                                        role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
+                                </li>
+                                <li class="nav-item" *ngIf="!notJoined">
+                                    <a class="nav-link" id="posts-tab" data-toggle="tab" href="#posts" role="tab"
+                                        aria-controls="posts" aria-selected="false">Event posts</a>
+                                </li>
+                                <li class="nav-item"
+                                    *ngIf="displayEvent.author == auth.getIdentity().username && displayEvent.isPrivate">
+                                    <a class="nav-link" id="unapproved-tab" data-toggle="tab" href="#unapproved"
+                                        role="tab" aria-controls="unapproved" aria-selected="false">Join requests</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content ml-1" id="myTabContent">
+                                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel"
+                                    aria-labelledby="basicInfo-tab">
+
+
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Author</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            {{displayEvent.author }}
+                                        </div>
+                                    </div>
+                                    <hr />
+
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Type</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            {{displayEvent.isPrivate? 'Private' : 'Public' }}
+                                        </div>
+                                    </div>
+                                    <hr />
+
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Start</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            {{displayEvent.start | date}}
+                                            <span *ngIf="displayEvent.start == null">Active</span>
+                                        </div>
+                                    </div>
+                                    <hr />
+
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">End</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            {{displayEvent.end | date}}
+                                            <span *ngIf="displayEvent.end == null">Never ends</span>
+                                        </div>
+                                    </div>
+                                    <hr />
+
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Description</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            {{displayEvent.description}}
+                                        </div>
+                                    </div>
+                                    <hr />
+
+                                </div>
+
+                                <!-- Event posts -->
+                                <div class="tab-pane fade" id="posts" role="tabpanel" aria-labelledby="posts-tab"
+                                    *ngIf="!notJoined">
+
+                                    <div *ngFor="let post of posts">
+                                        <div class="panel panel-default container">
+                                            <div class="panel-body">
+                                                <div>
+                                                    <a class="username" [routerLink]="['/user', post.author]">
+                                                        {{post.author}}
+                                                    </a>
+
+                                                </div>
+                                                <hr>
+                                                <h4 class="">
+                                                    {{post.description}}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Unapproved users -->
+                                <div class="tab-pane fade" id="unapproved" role="tabpanel"
+                                    aria-labelledby="unapproved-tab"
+                                    *ngIf="displayEvent.author == this.auth.getIdentity().username">
+
+                                    <div *ngIf="unacceptedUsers != null">
+                                        <div class="panel panel-default container">
+                                            <div class="panel-body" *ngFor="let user of unacceptedUsers">
+                                                <div>
+                                                    <a class="username" [routerLink]="['/user', user.user]">
+                                                        {{user.user}} |
+                                                    </a>
+                                                    <button class="btn btn-success "
+                                                        (click)="acceptUser(user.user)">Accept</button> |
+                                                    <button class="btn btn-danger"
+                                                        (click)="rejectUser(user.user)">Reject</button>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="unacceptedUsers == null">
+                                        <p>No new requests.</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Add new comment -->
+    <div class="row" *ngIf="!notJoined && displayEvent.active">
+        <div class="col-12">
+            <h3>Post something on event wall:</h3>
+            <form #commentForm="ngForm" (ngSubmit)="onSubmit(commentForm)">
+                <div class="container">
+
+                    <label for="description"><b>Post</b></label>
+                    <textarea rows="2" cols="25" placeholder="Enter description" required name="description"
+                        [(ngModel)]="eventPost.description"></textarea>
+
+                    <button type="submit" value="AddBook" class="btnAdd">Post
+                        comment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

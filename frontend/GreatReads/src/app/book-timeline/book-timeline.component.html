@@ -1,0 +1,73 @@
+<section class="search-sec">
+    <div class="container">
+        <form (ngSubmit)="search()" novalidate="novalidate">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                            <input type="text" class="form-control search-slt" [(ngModel)]="sName" name="name"
+                                placeholder="Enter book name">
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                            <input type="text" class="form-control search-slt" [(ngModel)]="sAuthor" name="author"
+                                placeholder="Enter author">
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                            <select class="form-control search-slt" [(ngModel)]="sGenre" name="genre"
+                                id="exampleFormControlSelect1">
+                                <option selected value="">Select genre</option>
+                                <option value="{{genre.name}}" *ngFor='let genre of displayGenres'>
+                                    {{genre.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                            <button type="submit" class="btn btn-danger wrn-btn">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<div *ngIf="!exist" class="container text-center">
+    <span *ngIf="loggedIn">
+        There are no books matching the parametrs. Do you wanna <a routerLink='/add_book'
+            [routerLinkActive]="['active']">
+            add it?</a>
+    </span>
+    <span *ngIf="!loggedIn">
+        There are no books matching the parametrs.
+    </span>
+
+</div>
+<span *ngFor='let book of books'>
+    <div class='container' *ngIf="checkForSearch(book)" [ngClass]="{'gray_bck': !book.approved}">
+        <div class='row'>
+            <div class='column'>
+                <h3><b><a routerLink='/book/{{book.name}}' [routerLinkActive]="['active']">
+                            {{book.name}}</a></b></h3>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='column'>
+                <h5>{{book.authors}}</h5>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-6'>
+                <p>Published: {{book.published | date}}</p>
+            </div>
+            <div class='col-md-6'>
+                <p>Genres: {{book.genres}}</p>
+            </div>
+        </div>
+        <hr>
+        <div class='row'>
+            <div class='column'>
+                <h5>Description:</h5>
+                <p>{{book.description}}</p>
+            </div>
+        </div>
+    </div>
+</span>

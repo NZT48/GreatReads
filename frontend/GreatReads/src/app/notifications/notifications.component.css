@@ -1,0 +1,10 @@
+.row {
+    padding: 16px;
+    border: 3px solid #f1f1f1;
+    background: #edfffb;
+
+}
+
+h3,h5, p {
+    padding: 10px;
+}

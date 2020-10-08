@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" [routerLink]="['/home']" [routerLinkActive]="['active']">GreatReads</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-item nav-link active" [routerLink]="['/home']" [routerLinkActive]="['active']">Home <span
+            class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item" *ngIf="!this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/login']" [routerLinkActive]="['active']">Login</a>
+      </li>
+      <li class="nav-item" *ngIf="!this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/register']" [routerLinkActive]="['active']">Register</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/user']" [routerLinkActive]="['active']">My profile</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/books']" [routerLinkActive]="['active']">Books</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/add_book']" [routerLinkActive]="['active']">Add book</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/users']" [routerLinkActive]="['active']">Users</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/events']" [routerLinkActive]="['active']">Events</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/add_event']" [routerLinkActive]="['active']">Add event</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn && this.identity.role==3">
+        <a class="nav-item nav-link" [routerLink]="['/admin_panel']" [routerLinkActive]="['active']">Admin panel</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn && this.identity.role==2">
+        <a class="nav-item nav-link" [routerLink]="['/moderator_panel']" [routerLinkActive]="['active']">Moderator
+          panel</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn">
+        <a class="nav-item nav-link" [routerLink]="['/notifications']" [routerLinkActive]="['active']">Notifications</a>
+      </li>
+      <li class="nav-item" *ngIf="this.loggedIn">
+        <a class="nav-item nav-link" (click)="logout()" [routerLink]="['/home']" [routerLinkActive]="['active']">Log
+          out</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<router-outlet></router-outlet>
+<br>
+<hr>
+<div class="footer-copyright text-center py-3">© 2020 Copyright:
+  <a href="https://www.etf.bg.ac.rs/"> Elektrotehnički fakultet, Univerzitet u Beogradu</a>
+</div>

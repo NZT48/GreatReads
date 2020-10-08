@@ -1,0 +1,23 @@
+<span *ngIf="identity.role==2">
+    <h3> Panel for approving new books</h3>
+    <hr>
+    <div *ngIf="unapproved_books != null">
+        <ol>
+            <li *ngFor='let book of unapproved_books'>
+                {{book.name}} |
+                {{book.authors}} |
+                {{book.published | date}} |
+                <button class="btn btn-success " (click)="acceptBook(book)">Accept</button> |
+                <button class="btn btn-danger" (click)="rejectBook(book)">Reject</button>
+                <hr>
+            </li>
+        </ol>
+    </div>
+    <div *ngIf="unapproved_books == null">
+        <p>No new books.</p>
+    </div>
+    <hr>
+</span>
+<span *ngIf="identity.role!=2">
+    <h3 style="color:red">Access denied</h3>
+</span>

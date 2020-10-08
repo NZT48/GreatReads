@@ -1,0 +1,157 @@
+<span *ngIf="identity.role==3">
+    <h3> Panel for accepting new users</h3>
+    <hr>
+    <div *ngIf="unapproved_users">
+        <ol>
+            <li *ngFor='let user of unapproved_users'>
+                {{user.username}} |
+                {{user.name}} |
+                {{user.surname}} |
+                <button class="btn btn-success " (click)="accept(user)">Accept</button> |
+                <button class="btn btn-danger" (click)="reject(user)">Reject</button>
+                <hr>
+            </li>
+        </ol>
+    </div>
+    <div *ngIf="!unapproved_users">
+        <p>No new users.</p>
+    </div>
+    <hr>
+    <h3> Panel for approving new books</h3>
+    <hr>
+    <div *ngIf="unapproved_books != null">
+        <ol>
+            <li *ngFor='let book of unapproved_books'>
+                {{book.name}} |
+                {{book.authors}} |
+                {{book.published | date}} |
+                <button class="btn btn-success " (click)="acceptBook(book)">Accept</button> |
+                <button class="btn btn-danger" (click)="rejectBook(book)">Reject</button>
+                <hr>
+            </li>
+        </ol>
+    </div>
+    <div *ngIf="unapproved_books == null">
+        <p>No new books.</p>
+    </div>
+    <hr>
+    <h3> Privilege modification panel</h3>
+    <div>
+
+        <form #roleForm="ngForm" (ngSubmit)="changeRole(roleForm)" class="col-lg-12">
+            <div class="container">
+                <label for="usernamec"><b>Username of user whose role you are changing:</b></label>
+                <input type="text" placeholder="Enter username" name="usernamec" [(ngModel)]="username_changed_role"
+                    required>
+
+                <label for="rolec"><b>New role</b></label>
+                <select name="rolec" [(ngModel)]="changed_role" required>
+                    <option [value]="1">User</option>
+                    <option [value]="2">Moderator</option>
+                    <option [value]="3">Admin</option>
+                </select>
+
+                <div *ngIf="role_msg == 'Role successfuly changed!'" style="color: green;">
+                    {{role_msg}}
+                </div>
+                <div *ngIf="role_msg != 'Role successfuly changed!'" style="color: red;">
+                    {{role_msg}}
+                </div>
+
+                <button type="submit" class="submit_btn" value="updaterole">Update role</button>
+            </div>
+        </form>
+    </div>
+    <hr>
+
+    <h3> Genre modification panel</h3>
+    <div class="col-lg-5">
+        <label for="genreName"><b>Name of genre to create or delete:</b></label>
+        <input type="text" placeholder="Enter genre name" name="genreName" [(ngModel)]="genreName">
+        <div class="alert alert-success" *ngIf="genre_status == 'success'">
+            {{genre_msg}}
+        </div>
+        <div class="alert alert-danger" *ngIf="genre_status == 'error'">
+            {{genre_msg}}
+        </div>
+        <button type="button" class="btn btn-success" (click)='addGenre()'>Add genre</button>
+        <button type="button" class="btn btn-danger" (click)='removeGenre()'>Remove genre</button>
+    </div>
+
+    <hr>
+
+    <h3>PDF uploading panel</h3>
+    <div class="col-lg-5">
+        <label for="bookNamePDF"><b>Choose book to which you want to add or change pdf:</b></label>
+        <select class="form-control search-slt" [(ngModel)]="bookNamePDF" name="bookNamePDF">
+            <option selected value="">Select book name</option>
+            <option value="{{book.name}}" *ngFor='let book of books'>
+                {{book.name}}
+            </option>
+        </select>
+        <br>
+        <label for="pdfBook"><b>File:</b></label>&nbsp; &nbsp;
+        <input type="file" name="pdfBook" ng2FileSelect [uploader]="uploader" accept="application/pdf" />
+        <br>
+        <button type="button" class="btn btn-success" (click)='addPDF()'>Upload PDF</button>
+    </div>
+
+    <hr>
+    <h3> User registration panel</h3>
+    <div class="col-lg-5">
+        <div class="alert alert-success" *ngIf="status == 'success'">
+            Welcome!
+        </div>
+        <div class="alert alert-danger" *ngIf="status == 'error'">
+            Error, something wrong.
+        </div>
+        <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" class="col-lg-12">
+            <div class="container">
+                <label for="username"><b>Username</b></label>
+                <input type="text" placeholder="Enter username" name="username" [(ngModel)]="user.username" required>
+
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" [(ngModel)]="user.password"
+                    [pattern]="psswdPattern" #psswd="ngModel" autocomplete=new-password required>
+                <div *ngIf="psswd.errors?.pattern" class="alert alert-danger">
+                    Password not valid. Password needs to start with letter, have at least one digit, have at least one
+                    special character, have at least one upper case letter and minimum 7 in length.
+                </div>
+
+                <label for="mail"><b>Email</b></label>
+                <input type="text" placeholder="Enter mail" name="mail" [(ngModel)]="user.mail"
+                    [pattern]="mailRgxPattern" #mailRgx="ngModel" required>
+                <div *ngIf="mailRgx.errors?.pattern" class="alert alert-danger">
+                    Not valid mail format. Example: test@mail.com
+                </div>
+
+                <label for="name"><b>Name</b></label>
+                <input type="text" placeholder="Enter name" name="name" [(ngModel)]="user.name" required>
+
+                <label for="surname"><b>Surname</b></label>
+                <input type="text" placeholder="Enter surname" name="surname" [(ngModel)]="user.surname" required>
+
+                <label for="city"><b>City</b></label>
+                <input type="text" placeholder="Enter city" name="city" [(ngModel)]="user.city" required>
+
+                <label for="country"><b>Country</b></label>
+                <input type="text" placeholder="Enter country" name="country" [(ngModel)]="user.country" required>
+
+                <label for="birthday"><b>Birthday</b></label>
+                <input type="date" placeholder="Enter birthday" name="birthday" [(ngModel)]="user.birthday" required>
+
+                <label for="role"><b>Role</b></label>
+                <select name="role" [(ngModel)]="user.role">
+                    <option [value]="1">User</option>
+                    <option [value]="2">Moderator</option>
+                    <option [value]="3">Admin</option>
+                </select>
+
+                <button type="submit" class="submit_btn" value="Register">Register</button>
+            </div>
+        </form>
+    </div>
+</span>
+<span *ngIf="identity.role!=3">
+    <h3 style="color:red">Access denied</h3>
+</span>

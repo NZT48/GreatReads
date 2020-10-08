@@ -1,0 +1,11 @@
+<div class="container">
+    <div class="row" *ngFor="let notf of notifications">
+        <div class="column">
+            &nbsp;&nbsp;<a class="book" [routerLink]="['/user', notf.sender]">
+                {{notf.sender}}
+            </a> commented on book <a class="book" [routerLink]="['/book', notf.book]">
+                "{{notf.book}}"
+            </a>.
+        </div>
+    </div>
+</div>

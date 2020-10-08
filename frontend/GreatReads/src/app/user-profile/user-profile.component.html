@@ -1,0 +1,337 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title mb-4">
+                        <div class="d-flex justify-content-start">
+                            <div class="image-container">
+                                <img src="../../assets/profile.png" id="imgProfile" style="width: 150px; height: 150px"
+                                    class="img-thumbnail" *ngIf="displayUser.image==''" />
+                                <img src="{{url + 'get_image/' + displayUser.image}}" id="imgProfile"
+                                    style="width: 150px; height: 150px" class="img-thumbnail"
+                                    *ngIf="displayUser.image!=''" />
+                            </div>
+                            <div class="userData ml-3">
+                                <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a
+                                        [routerLink]="['/user', displayUser.username]">{{displayUser.username}}</a></h2>
+
+                                <div class="follow" *ngIf="displayUser.username != this.auth.getIdentity().username">
+                                    <button class="btn btn-success" *ngIf="!following"
+                                        (click)="followUser(this.displayUser.username)">
+                                        Follow
+                                    </button>
+                                    <button class="btn btn-primary" *ngIf="following"
+                                        (click)="unfollowUser(this.displayUser.username)">
+                                        Stop following
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row active">
+                        <div class="col-12">
+                            <span class="alert alert-success" role="alert" *ngIf="this.displayUser.active">
+                                Online!
+                            </span>
+                            <span class="alert alert-secondary" role="alert" *ngIf="!this.displayUser.active">
+                                Last active: {{displayUser.last_active | date : 'short'}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo"
+                                        role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab"
+                                        aria-controls="comments" aria-selected="false">Comments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="readBooks-tab" data-toggle="tab" href="#readBooks"
+                                        role="tab" aria-controls="lists" aria-selected="false">Read books</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="curReading-tab" data-toggle="tab" href="#curReading"
+                                        role="tab" aria-controls="lists" aria-selected="false">Currently reading</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="toRead-tab" data-toggle="tab" href="#toRead" role="tab"
+                                        aria-controls="lists" aria-selected="false">Books To Read</a>
+                                </li>
+                            </ul>
+
+
+                            <div class="tab-content ml-1" id="myTabContent">
+
+                                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel"
+                                    aria-labelledby="basicInfo-tab">
+
+                                    <div *ngIf="!editable">
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Full Name</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayUser.name}} {{displayUser.surname}}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Birth Date</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayUser.birthday | date}}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">City</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayUser.city}}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Country</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayUser.country}}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                            (click)="editProfile()"
+                                            *ngIf="this.displayUser.username == this.auth.getIdentity().username">
+                                            Edit profile
+                                        </button>
+
+                                        <a class="btn btn-secondary"
+                                            *ngIf="this.displayUser.username == this.auth.getIdentity().username"
+                                            [routerLink]="['/change_password']">
+                                            Change password
+                                        </a>
+
+                                    </div>
+
+                                    <div *ngIf="editable">
+                                        <form (ngSubmit)="saveChanges()">
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-5">
+                                                    <label style="font-weight:bold;">Name</label>
+                                                </div>
+                                                <div class="col-md-8 col-6">
+                                                    <input type="text" placeholder="{{displayUser.name}}"
+                                                        [(ngModel)]="displayUser.name" name="name">
+                                                </div>
+                                            </div>
+                                            <hr />
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-5">
+                                                    <label style="font-weight:bold;">Surame</label>
+                                                </div>
+                                                <div class="col-md-8 col-6">
+                                                    <input type="text" placeholder="{{displayUser.surname}}"
+                                                        [(ngModel)]="displayUser.surname" name="surname">
+                                                </div>
+                                            </div>
+                                            <hr />
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-5">
+                                                    <label style="font-weight:bold;">Birth Date</label>
+                                                </div>
+                                                <div class="col-md-8 col-6">
+                                                    <input type="date" placeholder="{{displayUser.birthday}}"
+                                                        name="birthday" [(ngModel)]="displayUser.birthday" required>
+                                                </div>
+                                            </div>
+                                            <hr />
+
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-5">
+                                                    <label style="font-weight:bold;">City</label>
+                                                </div>
+                                                <div class="col-md-8 col-6">
+                                                    <input type="text" placeholder="{{displayUser.city}}"
+                                                        [(ngModel)]="displayUser.city" name="city">
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-5">
+                                                    <label style="font-weight:bold;">Country</label>
+                                                </div>
+                                                <div class="col-md-8 col-6">
+                                                    <input type="text" placeholder="{{displayUser.country}}"
+                                                        [(ngModel)]="displayUser.country" name="country">
+                                                </div>
+                                            </div>
+                                            <hr />
+
+                                            <label for="image"><b>Profile image:&nbsp;&nbsp;</b></label>
+                                            <input type="file" name="image" ng2FileSelect [uploader]="uploader"
+                                                accept="image/x-png,image/gif,image/jpeg" />
+
+                                            <hr />
+
+                                            <button type="submit" class="btn btn-success btn-large "
+                                                value="SaveChanges">Save changes</button>
+
+                                        </form>
+                                    </div>
+
+                                </div>
+
+                                <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="Comments-tab">
+                                    <div *ngFor="let comment of comments">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div>
+                                                    <a class="book" [routerLink]="['/book', comment.book]">
+                                                        {{comment.book}}
+                                                    </a>
+                                                    &nbsp;|&nbsp;
+                                                    {{comment.bookAuthors}}
+                                                    &nbsp;|&nbsp;
+                                                    Rating: {{comment.rating}}
+                                                </div>
+                                                <hr>
+                                                <h4 class="publication-text pull-left">
+                                                    {{comment.description}}
+                                                </h4>
+                                                <hr>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="readBooks" role="tabpanel"
+                                    aria-labelledby="readBooks-tab">
+                                    <div>
+                                        <div class="panel panel-default">
+                                            <div class="container panel-body">
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+                                                        <h4>Books that have been read</h4>
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item" *ngFor="let book of finished | paginate : {
+                                                                                            itemsPerPage: pageSize, currentPage: page, totalItems: count};
+                                                                                            let i = index"
+                                                                [class.active]="i == currentIndex">
+
+                                                                <a [routerLink]="['/book', book.bookname]">
+                                                                    {{book.bookname}}
+                                                                </a>
+
+                                                                <span class="pull-right" style="float: right;"
+                                                                    *ngIf="this.displayUser.username == this.auth.getIdentity().username">
+                                                                    <button class="btn btn-danger pull-right"
+                                                                        (click)="remove(book)">X</button>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+
+                                                        <div class="row justify-content-center">
+                                                            <pagination-controls previousLabel="Prev" nextLabel="Next"
+                                                                responsive="true"
+                                                                (pageChange)="handlePageChange($event)">
+                                                            </pagination-controls>
+                                                        </div>
+
+                                                        <div class="row justify-content-center">
+                                                            Items per Page:
+                                                            <select (change)="handlePageSizeChange($event)">
+                                                                <option *ngFor="let size of pageSizes" [ngValue]="size">
+                                                                    {{ size }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="display: block">
+                                            <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels"
+                                                [chartType]="pieChartType" [colors]="chartColors"></canvas>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="curReading" role="tabpanel"
+                                    aria-labelledby="curReading-tab">
+
+                                    <h4>Currently reading</h4>
+                                    <div class="list-group container" *ngFor="let book of reading">
+                                        <div class="row bookEntry">
+                                            <div class="col-sm-8">
+                                                <a class="book" [routerLink]="['/book', book.bookname]">
+                                                    {{book.bookname}}
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-4 pull-right"
+                                                *ngIf="this.displayUser.username == this.auth.getIdentity().username">
+                                                <button class="btn btn-danger pull-right"
+                                                    (click)="remove(book)">X</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="tab-pane fade" id="toRead" role="tabpanel" aria-labelledby="toRead-tab">
+
+                                    <h4>Want to read</h4>
+                                    <div class="list-group container" *ngFor="let book of toread">
+                                        <div class="row bookEntry">
+                                            <div class="col-sm-8">
+                                                <a class="book" [routerLink]="['/book', book.bookname]">
+                                                    {{book.bookname}}
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-4 pull-right"
+                                                *ngIf="this.displayUser.username == this.auth.getIdentity().username">
+                                                <button class="btn btn-danger pull-right"
+                                                    (click)="remove(book)">X</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

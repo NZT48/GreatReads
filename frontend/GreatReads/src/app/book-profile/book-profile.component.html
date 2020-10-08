@@ -1,0 +1,245 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title mb-4">
+                        <div class="d-flex justify-content-start">
+                            <div class="image-container">
+                                <img src="../../assets/book.png" id="imgProfile" style="width: 150px; height: 150px"
+                                    class="img-thumbnail" *ngIf="displayBook.image==''" />
+                                <img src="{{url + 'get_image/' + displayBook.image}}" id="imgProfile"
+                                    style="width: 150px; height: 150px" class="img-thumbnail"
+                                    *ngIf="displayBook.image!=''" />
+                            </div>
+                            <div class="userData ml-3">
+                                <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a
+                                        [routerLink]="['/book', displayBook.name]">{{displayBook.name}}</a></h2>
+
+                                <span
+                                    *ngIf="readingStatus.toread == false && readingStatus.finished == false && readingStatus.updatedAt != null ">
+                                    Progress bar:
+                                    <div class="progress">
+
+                                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
+                                            [style.width]="percent_read + '%'" aria-valuemin="0" aria-valuemax="100">
+                                            {{percent_read}}%
+                                        </div>
+                                    </div>
+                                </span>
+                                <br>
+                                <a type="button" class="btn btn-light" [routerLink]="['/pdf', displayBook.pdf]"
+                                    *ngIf="displayBook.pdf != null && displayBook.pdf != '' && loggedIn">Read book</a>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <!-- Reading lists buttons -->
+                    <div class="row" *ngIf="displayBook.approved && loggedIn">
+                        <button type="button" (click)="addWantRead()" class="btn btn-primary btnLists">Want to
+                            read</button>
+                        <button type="button" (click)="addAlreadyRead()" class="btn btn-info btnLists">Already
+                            read</button>
+                        <input type="number" placeholder="Current page" min="0"
+                            [(ngModel)]="readingStatus.current">&nbsp; of
+                        &nbsp;<input type="number" placeholder="Nubmer of pages"
+                            [(ngModel)]="readingStatus.pages">&nbsp;&nbsp;
+                        <button type="button" (click)="updateReading()" class="btn btn-warning yellowBtn">Update current
+                            reading status</button>
+                        <button type="button" (click)="remove()" class="btn btn-danger"
+                            *ngIf="readingStatus.createdAt != null">Remove book from list</button>
+                    </div>
+
+                    <hr>
+
+                    <!-- Tabs div -->
+                    <div class="row">
+
+                        <div class="col-12">
+
+                            <!-- Defining tabs -->
+                            <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo"
+                                        role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab"
+                                        aria-controls="comments" aria-selected="false">Comments</a>
+                                </li>
+                            </ul>
+
+                            <!-- Tabs implementation -->
+                            <div class="tab-content ml-1" id="myTabContent">
+
+                                <!-- Basic info tab -->
+                                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel"
+                                    aria-labelledby="basicInfo-tab">
+
+                                    <div *ngIf="!editable">
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Authors</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayBook.authors}}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Publish date</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayBook.published | date}}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Rating</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayBook.rating}} <span class="fa fa-star checked"
+                                                    style="color:orange"></span>
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Genres</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayBook.genres}}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Description</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{displayBook.description}}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                            (click)="editBook()"
+                                            *ngIf="auth.getIdentity().role==3 && displayBook.approved">
+                                            Edit book
+                                        </button>
+                                    </div>
+
+                                    <div *ngIf="editable">
+                                        <form (ngSubmit)="saveChanges()">
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-5">
+                                                    <label style="font-weight:bold;">Authors (separated by
+                                                        comma)</label>
+                                                </div>
+                                                <div class="col-md-8 col-6">
+                                                    <input type="text" placeholder="{{displayBook.authors}}"
+                                                        [(ngModel)]="displayBook.authors" name="authors">
+                                                </div>
+                                            </div>
+                                            <hr />
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-5">
+                                                    <label style="font-weight:bold;">Publish date</label>
+                                                </div>
+                                                <div class="col-md-8 col-6">
+                                                    <input type="date" placeholder="{{displayBook.published}}"
+                                                        name="published" [(ngModel)]="displayBook.published" required>
+                                                </div>
+                                            </div>
+                                            <hr />
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-5">
+                                                    <label style="font-weight:bold;">Description</label>
+                                                </div>
+                                                <div class="col-md-8 col-6">
+                                                    <textarea rows="2" cols="25"
+                                                        placeholder="{{displayBook.description}}"
+                                                        [(ngModel)]="displayBook.description"
+                                                        name="description"></textarea>
+                                                </div>
+                                            </div>
+                                            <hr />
+
+                                            <button type="submit" class="btn btn-success btn-large "
+                                                value="SaveChanges">Save changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+
+
+                                <!-- Comments tab -->
+                                <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                                    <div *ngFor="let comment of comments">
+                                        <div class="panel panel-default container">
+                                            <div class="panel-body">
+                                                <div>
+                                                    <a class="username" [routerLink]="['/user', comment.author]"
+                                                        *ngIf="loggedIn">
+                                                        {{comment.author}}
+                                                    </a>
+                                                    <span *ngIf="!loggedIn">Anonymous</span>
+                                                    &nbsp;|&nbsp;
+                                                    <span class="date">
+
+                                                        Rating: {{comment.rating}}
+                                                    </span>
+                                                </div>
+                                                <hr>
+                                                <h4 class="">
+                                                    {{comment.description}}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Add new comment -->
+    <div class="row" *ngIf="this.percent_read > 49 || this.readingStatus.finished">
+        <div class="col-12">
+            <h3>Post new comment or update existing:</h3>
+            <form #commentForm="ngForm" (ngSubmit)="onSubmit(commentForm)">
+                <div class="container">
+
+                    <label for="rating"><b>Enter rating</b></label>&nbsp;&nbsp;
+                    <input type="number" placeholder="Enter rating" min="1" max="10" name="rating"
+                        [(ngModel)]="newComment.rating" required><span class="fa fa-star checked"
+                        style="color:orange"></span>
+                    <br>
+                    <label for="description"><b>Comment</b></label>
+                    <textarea rows="2" cols="25" placeholder="Enter description" maxlength="5000" name="description"
+                        [(ngModel)]="newComment.description"></textarea>
+
+                    <button type="submit" value="AddBook" class="btnAdd">Post
+                        comment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

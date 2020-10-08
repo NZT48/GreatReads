@@ -1,0 +1,24 @@
+<div class="col-lg-5">
+    <h1 class="h1-strong">Setting new password</h1>
+    <div class="alert alert-success" *ngIf="status == 'success'">
+        Your password is successfully changed!
+    </div>
+    <div class="alert alert-danger" *ngIf="status == 'error'">
+        Error, {{msg}}.
+    </div>
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="col-lg-12">
+        <div class="container">
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" [(ngModel)]="password"
+                autocomplete=new-password [pattern]="psswdPattern" #psswd="ngModel" required>
+            <div *ngIf="psswd.errors?.pattern" class="alert alert-danger">
+                Password not valid. Password needs to start with letter, have at least one digit, have at least one
+                special character, have at least one upper case letter and minimum 7 in length.
+            </div>
+            <label for="confirm_pass"><b>Confirm password</b></label>
+            <input type="password" placeholder="Type again password" name="confirm_pass" [(ngModel)]="confirm_pass"
+                autocomplete=new-password required>
+            <button type="submit">Set new password</button>
+        </div>
+    </form>
+</div>

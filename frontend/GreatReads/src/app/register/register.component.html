@@ -1,0 +1,93 @@
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+<div class="col-lg-5">
+    <h1 class="h1-strong">Register</h1>
+    <div class="alert alert-success" *ngIf="status == 'success'">
+        Welcome!
+    </div>
+    <div class="alert alert-danger" *ngIf="status == 'error'">
+        Error, {{msg}},
+    </div>
+    <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" class="col-lg-12">
+        <div class="container">
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter username" name="username" #uname="ngModel" [(ngModel)]="user.username"
+                required>
+            <div class="alert alert-danger" *ngIf="uname.errors?.required">
+                Username is required.
+            </div>
+
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" [(ngModel)]="user.password"
+                autocomplete=new-password [pattern]="psswdPattern" #psswd="ngModel" required>
+            <div *ngIf="psswd.errors?.pattern" class="alert alert-danger">
+                Password not valid. Password needs to start with letter, have at least one digit, have at least one
+                special character, have at least one upper case letter and minimum 7 in length.
+            </div>
+            <div class="alert alert-danger" *ngIf="psswd.errors?.required">
+                Password is required.
+            </div>
+
+            <label for="confirm_pass"><b>Confirm password</b></label>
+            <input type="password" placeholder="Type again password" name="confirm_pass" [(ngModel)]="confirm_pass"
+                autocomplete=new-password required>
+            <div class="alert alert-danger" *ngIf="psswd.errors?.required">
+                Confirmation of password is required.
+            </div>
+
+            <label for="mail"><b>Email</b></label>
+            <input type="text" placeholder="Enter mail" name="mail" [(ngModel)]="user.mail" [pattern]="mailRgxPattern"
+                #mailRgx="ngModel" required>
+            <div *ngIf="mailRgx.errors?.pattern" class="alert alert-danger">
+                Not valid mail format. Example: test@mail.com
+            </div>
+            <div class="alert alert-danger" *ngIf="mailRgx.errors?.required">
+                Mail is required.
+            </div>
+
+            <label for="name"><b>Name</b></label>
+            <input type="text" placeholder="Enter name" name="name" [(ngModel)]="user.name" #name="ngModel" required>
+            <div class="alert alert-danger" *ngIf="name.errors?.required">
+                Name is required.
+            </div>
+
+            <label for="surname"><b>Surname</b></label>
+            <input type="text" placeholder="Enter surname" name="surname" [(ngModel)]="user.surname" #surname="ngModel"
+                required>
+            <div class="alert alert-danger" *ngIf="surname.errors?.required">
+                Surname is required.
+            </div>
+
+            <label for="city"><b>City</b></label>
+            <input type="text" placeholder="Enter city" name="city" [(ngModel)]="user.city" #city="ngModel" required>
+            <div class="alert alert-danger" *ngIf="city.errors?.required">
+                City is required.
+            </div>
+
+            <label for="country"><b>Country</b></label>
+            <input type="text" placeholder="Enter country" name="country" [(ngModel)]="user.country" #country="ngModel"
+                required>
+            <div class="alert alert-danger" *ngIf="country.errors?.required">
+                Country is required.
+            </div>
+
+            <label for="birthday"><b>Birthday</b></label>
+            <input type="date" placeholder="Enter birthday" name="birthday" [(ngModel)]="user.birthday" required>
+
+            <label for="image"><b>Profile image:</b></label>
+            <input type="file" name="image" ng2FileSelect [uploader]="uploader"
+                accept="image/x-png,image/gif,image/jpeg" />
+
+
+            <div class="recaptcha">
+                <re-captcha (resolved)="resolved($event)" siteKey="siteKey" required>
+                </re-captcha>
+            </div>
+
+            <button
+                [disabled]="!captchaPassed || uname.invalid || psswd.invalid || mailRgx.invalid || name.invalid || surname.invalid || city.invalid || country.invalid"
+                type="submit" value="Register">Register</button>
+        </div>
+    </form>
+</div>

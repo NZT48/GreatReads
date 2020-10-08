@@ -1,0 +1,36 @@
+
+  /* Add a hover effect for buttons */
+button:hover {
+    opacity: 0.8;
+}
+  
+button {
+    padding: 12px;
+}
+  
+  /* Add padding to containers */
+.container {
+    padding: 16px;
+    border: 3px solid #f1f1f1;
+
+}
+
+h3,h5, p {
+    padding: 10px;
+}
+
+.search-sec{
+    padding: 2rem;
+}
+.search-slt{
+    display: block;
+    width: 100%;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #55595c;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    height: calc(3rem + 2px) !important;
+    border-radius:0;
+}

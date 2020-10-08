@@ -1,0 +1,95 @@
+body{
+    padding-top: 68px;
+    padding-bottom: 50px;
+}
+
+.image-container {
+    position: relative;
+}
+
+.image {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.image-container:hover .image {
+    opacity: 0.3;
+}
+
+.image-container:hover .middle {
+    opacity: 1;
+}
+
+
+.panel {
+    margin: 5px !important;
+}
+
+form {
+    border: 3px solid #f1f1f1;
+}
+
+
+textarea  {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+  
+  /* Set a style for all buttons */
+.btnAdd {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+  
+.btnLists {
+    padding: 10px 15px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 50%;
+}
+    /*
+ Add a hover effect for buttons */
+button:hover {
+    opacity: 0.8;
+}
+  
+  
+  /* Add padding to containers */
+.container {
+    padding: 16px;
+}
+
+.panel {
+    margin: 3px;
+    background: #f2fdff;
+}
+
+.panel-body {
+    margin: 8px;
+
+}

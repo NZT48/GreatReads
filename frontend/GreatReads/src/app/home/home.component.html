@@ -1,0 +1,43 @@
+<div class='container'>
+    <div class='row'>
+        <div class="col">
+            <div style="background-color: white;" *ngIf="!loggedIn && !guest">
+                <h1>GreatReads</h1>
+                <p> Welcome to GreatReads</p>
+                <a class="btn btn-secondary btn-lg" role="button" (click)="setGuest()">Continue as guest</a>
+                <a class="btn btn-info btn-lg" role="button" [routerLink]="['/login']"
+                    [routerLinkActive]="['active']">Login</a>
+                <a class="btn btn-primary btn-lg" role="button" [routerLink]="['/register']"
+                    [routerLinkActive]="['active']">Register</a>
+                <app-login></app-login>
+                <img src="../../assets/books.png" />
+            </div>
+            <div style="background-color: white;" *ngIf="loggedIn">
+                <h1>GreatReads</h1>
+                <p> Welcome {{identity.name}}!</p>
+                <a class="btn btn-success btn-lg" role="button" [routerLink]="['/user', identity.username]"
+                    [routerLinkActive]="['active']">Profile</a>
+                <a class="btn btn-info btn-lg" role="button" [routerLink]="['/books']"
+                    [routerLinkActive]="['active']">Books</a>
+                <a class="btn btn-warning btn-lg" role="button" [routerLink]="['/events']"
+                    [routerLinkActive]="['active']">Events</a>
+                <a class="btn btn-danger btn-lg" role="button" [routerLink]="['/users']"
+                    [routerLinkActive]="['active']">Users</a>
+                <hr>
+                <img src="../../assets/books.png" />
+
+            </div>
+            <div style="background-color: white;" *ngIf="guest">
+                <h1>GreatReads</h1>
+                <p> Welcome guest!</p>
+                <a class="btn btn-info btn-lg" role="button" [routerLink]="['/books']"
+                    [routerLinkActive]="['active']">Books</a>
+                <a class="btn btn-warning btn-lg" role="button" [routerLink]="['/events']"
+                    [routerLinkActive]="['active']">Events</a>
+                <hr>
+                <img src="../../assets/books.png" />
+
+            </div>
+        </div>
+    </div>
+</div>

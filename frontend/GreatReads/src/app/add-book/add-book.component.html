@@ -1,0 +1,55 @@
+<div class="col-lg-5">
+    <h1 class="h1-strong">Add book</h1>
+    <div class="alert alert-success" *ngIf="status == 'success'">
+        Book added!
+    </div>
+    <div class="alert alert-danger" *ngIf="status == 'error'">
+        Error, {{msg}}.
+    </div>
+    <form #bookForm="ngForm" (ngSubmit)="onSubmit(bookForm)">
+        <div class="container">
+            <label for="name"><b>Name</b></label>
+            <input type="text" placeholder="Enter name" name="name" [(ngModel)]="newBook.name" required>
+
+            <label for="authors"><b>Enter authors (sperated by comma)</b></label>
+            <input type="text" placeholder="Enter authors" name="authors" [(ngModel)]="newBook.authors" required>
+
+            <label for="published"><b>Date of publishing</b></label>
+            <input type="date" placeholder="Enter date of publishing" name="published" [(ngModel)]="newBook.published"
+                required>
+
+            <label for="genres"><b>Choose genres</b></label>
+            <select class="form-control search-slt" [(ngModel)]="genre_one" name="genres"
+                id="exampleFormControlSelect1">
+                <option selected value="">Select genre</option>
+                <option value="{{genre.name}}" *ngFor='let genre of displayGenres'>
+                    {{genre.name}}
+                </option>
+            </select>
+            <select class="form-control search-slt" [(ngModel)]="genre_two" name="genres"
+                id="exampleFormControlSelect1">
+                <option selected value="">Select genre</option>
+                <option value="{{genre.name}}" *ngFor='let genre of displayGenres'>
+                    {{genre.name}}
+                </option>
+            </select>
+            <select class="form-control search-slt" [(ngModel)]="genre_three" name="genres"
+                id="exampleFormControlSelect1">
+                <option selected value="">Select genre</option>
+                <option value="{{genre.name}}" *ngFor='let genre of displayGenres'>
+                    {{genre.name}}
+                </option>
+            </select>
+
+            <label for="description"><b>Description</b></label>
+            <textarea rows="2" cols="25" placeholder="Enter description" required name="description"
+                [(ngModel)]="newBook.description"></textarea>
+
+            <label for="image"><b>Cover image:</b></label>
+            <input type="file" name="image" ng2FileSelect [uploader]="uploader"
+                accept="image/x-png,image/gif,image/jpeg" />
+
+            <button type="submit" value="AddBook">Add book</button>
+        </div>
+    </form>
+</div>

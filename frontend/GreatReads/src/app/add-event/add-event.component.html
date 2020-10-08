@@ -1,0 +1,113 @@
+<h3 class="text-center">Creating new event</h3>
+<div class="container d-flex justify-content-center">
+
+    <div *ngIf="isContent[0]">
+        <div class="row">
+            <label for="name"><b>Name</b></label>
+            <input type="text" placeholder="Enter name" name="name" [(ngModel)]="newEvent.name">
+            <label for="description"><b>Description</b></label>
+            <textarea rows="2" cols="25" placeholder="Enter description" name="description"
+                [(ngModel)]="newEvent.description"></textarea>
+        </div>
+        <div class="row">
+            <button (click)="next(1)">Next</button>
+        </div>
+    </div>
+
+    <div *ngIf="isContent[1]">
+        <div class="row">
+            <span *ngIf="auth.getIdentity().role > 1">
+                <label for="isprivate"><b>Is event private?</b></label>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="isprivate" [(ngModel)]="newEvent.isPrivate">
+            </span>
+            <span *ngIf="auth.getIdentity().role == 1">
+                You need to be moderator or admin to make public event.
+            </span>
+        </div>
+        <div class="row">
+            <button (click)="back(0)">Back</button>
+            <button (click)="next(2)">Next</button>
+        </div>
+    </div>
+
+    <div *ngIf="isContent[2]">
+        <h5>Choose users to add to event:</h5>
+        <div class="row">
+            <div class="flex-flow">
+                <div *ngFor="let user of followed; index as i">
+                    <a [routerLink]="['/user', user.followed]">
+                        {{user.followed}}
+                    </a>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="userCheckBox" [(ngModel)]="checkBoxes[i]">
+                    <hr>
+                </div>
+
+            </div>
+            <div *ngIf="followed == null">
+                <p>No followed users to add</p>
+            </div>
+        </div>
+        <div class="row">
+            <button (click)="back(1)">Back</button>
+            <button (click)="next(3)">Next</button>
+        </div>
+    </div>
+
+    <div *ngIf="isContent[3]">
+        <div class=row>
+            <label for="isStarted"><b>Is event started?</b></label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="isStarted" [(ngModel)]="isStarted">
+        </div>
+        <div class="row">
+            <button (click)="back(2)">Back</button>
+            <button (click)="next(4)">Next</button>
+        </div>
+    </div>
+
+
+    <div *ngIf="isContent[4]">
+        <div class="row">
+            <label for="start"><b>When event starts</b></label>
+            <input type="date" name="start" [(ngModel)]="newEvent.start">
+        </div>
+        <div class="row">
+            <button (click)="back(3)">Back</button>
+            <button (click)="next(5)">Next</button>
+        </div>
+    </div>
+
+    <div *ngIf="isContent[5]">
+        <div class="row">
+            <label for="noEnd"><b>The event has no end?</b></label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="noEnd" [(ngModel)]="noEnd">
+        </div>
+        <div class="row">
+            <button (click)="back(4)">Back</button>
+            <button (click)="next(6)">Next</button>
+        </div>
+    </div>
+
+    <div *ngIf="isContent[6]">
+        <div class="row">
+            <label for="end"><b>End time</b></label>
+            <input type="date" name="end" [(ngModel)]="newEvent.end">
+        </div>
+        <div class="row">
+            <button (click)="back(5)">Back</button>
+            <button (click)="onSubmit()">Finish</button>
+        </div>
+    </div>
+
+    <div *ngIf="isContent[7]">
+        <div class="row">
+            <span *ngIf="status == 'success'" style="color:green">
+                Successful created event!
+            </span>
+            <span *ngIf="status == 'error'" style="color:red">
+                Error, go back and try again.
+            </span>
+        </div>
+        <div class="row" *ngIf="status == 'error'">
+            <button (click)="back(0)">Back to start</button>
+        </div>
+    </div>
+</div>

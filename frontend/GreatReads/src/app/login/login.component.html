@@ -1,0 +1,29 @@
+<div class="col-lg-5">
+    <h1 class="h1-strong">Log in</h1>
+    <div class="alert alert-success" *ngIf="status == 'success'">
+        Welcome!
+    </div>
+    <div class="alert alert-danger" *ngIf="status == 'error'">
+        Error, {{msg}}.
+    </div>
+
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="col-lg-12" name="loginForm">
+        <div class="container">
+            <label for="username"><b>Username</b></label>
+            <input type="text" id="username" name="loginUsername" placeholder="Enter username" name="username"
+                [(ngModel)]="username" required #uname="ngModel">
+            <div class="alert alert-danger" *ngIf="uname.invalid">
+                Username is required.
+            </div>
+            <label for="password"><b>Password</b></label>
+            <input type="password" name="pass" class="form-control" placeholder="Enter Password" name="password"
+                [(ngModel)]="password" autocomplete=new-password required #pass="ngModel">
+            <div class="alert alert-danger" *ngIf="pass.invalid">
+                Password is required.
+            </div>
+            <button type="submit" [disabled]="pass.invalid || uname.invalid" value="Login">Login</button>
+            <span class="psw">Forgot <a [routerLink]="['/forgot_password']"
+                    [routerLinkActive]="['active']">password?</a></span>
+        </div>
+    </form>
+</div>
